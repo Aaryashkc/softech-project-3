@@ -1,12 +1,18 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { axiosInstance } from "../lib/axios.js";
+import { axiosInstance } from "../libs/axios";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
   isSigningUp: false,
   isLoggingIn: false,
   isCheckingAuth: true,
+
+  // Check if user is admin
+  isAdmin: () => {
+    const { authUser } = get();
+    return authUser?.role === "admin";
+  },
 
   // Check if user is logged in
   checkAuth: async () => {

@@ -2,6 +2,9 @@ import Website from "../models/website.model.js";
 
 // Create Website Entry
 export const createWebsite = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
   const { software, startDate, endDate, state, district } = req.body;
 
   if (!software || !startDate || !endDate || !state || !district) {
@@ -27,6 +30,9 @@ export const createWebsite = async (req, res) => {
 
 // Get All Website Entries (role-based)
 export const getWebsites = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
   try {
     let websites;
 
@@ -45,6 +51,9 @@ export const getWebsites = async (req, res) => {
 
 // Update Website Entry
 export const updateWebsite = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
   const { id } = req.params;
   const { software, startDate, endDate, state, district } = req.body;
 
@@ -76,6 +85,9 @@ export const updateWebsite = async (req, res) => {
 
 // Delete Website Entry
 export const deleteWebsite = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
   const { id } = req.params;
 
   try {

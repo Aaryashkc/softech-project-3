@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { axiosInstance } from "../lib/axios.js";
+import { axiosInstance } from "../libs/axios.js";
 
 export const useWebsiteStore = create((set, get) => ({
   websites: [],

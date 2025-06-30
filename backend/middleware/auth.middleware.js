@@ -15,7 +15,13 @@ export const protectRoute = async (req, res, next) => {
       return res.status(401).json({ message: "Not authenticated, token invalid" });
     }
 
-    req.userId = decoded.userId;
+    // Fetch the user and attach to req.user
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(401).json({ message: "Not authenticated, user not found" });
+    }
+    req.user = user;
+    req.userId = user._id; // Also set userId for compatibility
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
@@ -31,8 +37,8 @@ export const protectRoute = async (req, res, next) => {
 
 export const isAdmin = async (req, res, next) => {
   try {
-    const user = await User.findById(req.userId);
-    if (!user || user.role !== "admin") {
+    // req.user is now set by protectRoute
+    if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied: Admins only" });
     }
     next();

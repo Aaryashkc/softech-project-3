@@ -41,14 +41,22 @@ export const signup = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in signup:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
 // LOGIN
 export const login = async (req, res) => {
   const { email, password } = req.body;
+  
   try {
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -68,7 +76,7 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in login:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
@@ -79,7 +87,7 @@ export const logout = (req, res) => {
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.log("Error in logout:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
@@ -93,7 +101,7 @@ export const checkAuth = async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     console.error("Error in checkAuth:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
@@ -111,6 +119,6 @@ export const promoteToAdmin = async (req, res) => {
     res.status(200).json({ message: "User promoted to admin successfully" });
   } catch (error) {
     console.error("Error promoting user:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
