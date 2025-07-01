@@ -7,6 +7,8 @@ export const useAuthStore = create((set, get) => ({
   isSigningUp: false,
   isLoggingIn: false,
   isCheckingAuth: true,
+  users: [],
+  isLoadingUsers: false,
 
   // Check if user is admin
   isAdmin: () => {
@@ -74,9 +76,26 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.put(`/auth/promote/${userId}`);
       toast.success(res.data.message || "User promoted to admin");
+      // Refresh users list after promotion
+      get().getAllUsers();
     } catch (error) {
       const msg = error?.response?.data?.message || "Promotion failed";
       toast.error(msg);
+    }
+  },
+
+  // Get all users (admin only)
+  getAllUsers: async () => {
+    set({ isLoadingUsers: true });
+    try {
+      const res = await axiosInstance.get("/auth/users");
+      set({ users: res.data });
+    } catch (error) {
+      const msg = error?.response?.data?.message || "Failed to fetch users";
+      toast.error(msg);
+      set({ users: [] });
+    } finally {
+      set({ isLoadingUsers: false });
     }
   },
 }));

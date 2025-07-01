@@ -5,6 +5,7 @@ import {
   signup,
   checkAuth,
   promoteToAdmin,
+  getAllUsers,
 } from '../controllers/auth.controller.js';
 import { protectRoute, isAdmin } from '../middleware/auth.middleware.js';
 
@@ -16,6 +17,7 @@ router.post('/logout', logout);
 
 router.get("/check", protectRoute, checkAuth);
 
+router.get('/users', protectRoute, isAdmin, getAllUsers);
 router.put('/promote/:userId', protectRoute, isAdmin, promoteToAdmin);
 
 export default router;

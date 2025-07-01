@@ -34,7 +34,7 @@ const App = () => {
           <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
           <Route path="/signup" element={authUser && isAdmin() ? <SignupPage /> : <Navigate to="/" />} />
           <Route path="/addclient" element={authUser ? <AddData /> : <Navigate to="/login" />} />
-          <Route path="/users" element={authUser ? <ManageUsers /> : <Navigate to="/login" />} />
+          <Route path="/users" element={authUser && isAdmin() ? <ManageUsers /> : <Navigate to="/" />} />
         </Routes>
         <Toaster />
       </div>
