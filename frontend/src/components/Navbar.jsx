@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, User, Users, LogOut, Settings } from 'lucide-react';
+import { ChevronDown, Users, LogOut} from 'lucide-react';
 import { useAuthStore } from "../store/useAuthStore"
+import { Link } from 'react-router-dom';
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -41,9 +42,9 @@ const Navbar = () => {
           {/* Logo/Brand */}
           <div className="flex items-center">
             <div className="flex items-center space-x-3">
-              <h1 className="text-xl font-bold text-white">
+              <Link to="/" className="text-xl font-bold text-white">
                 Softech Foundation
-              </h1>
+              </Link>
             </div>
           </div>
           
@@ -104,18 +105,6 @@ const Navbar = () => {
 
                   {/* Menu Items */}
                   <div className="py-2">
-                    {/* Visit Profile */}
-                    <button
-                      onClick={() => {
-                        // Add your profile navigation logic here
-                        console.log('Navigate to profile');
-                        setIsDropdownOpen(false);
-                      }}
-                      className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors duration-150"
-                    >
-                      <User className="w-4 h-4" />
-                      <span>Visit Profile</span>
-                    </button>
 
                     {/* View Users (Admin only) */}
                     {isAdmin() && (
@@ -128,7 +117,9 @@ const Navbar = () => {
                         className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors duration-150"
                       >
                         <Users className="w-4 h-4" />
-                        <span>View Users</span>
+                        <Link to="/users" className="flex-1">
+                          Manage Users
+                        </Link>
                       </button>
                     )}
 

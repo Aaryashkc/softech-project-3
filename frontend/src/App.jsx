@@ -8,6 +8,7 @@ import AddData from "./pages/AddData";
 import { useAuthStore } from "./store/useAuthStore";
 import Navbar from "./components/Navbar";
 import { Toaster } from "react-hot-toast";
+import ManageUsers from "./pages/ManageUsers";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, isAdmin } = useAuthStore();
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
           <Route path="/signup" element={authUser && isAdmin() ? <SignupPage /> : <Navigate to="/" />} />
           <Route path="/addclient" element={authUser ? <AddData /> : <Navigate to="/login" />} />
+          <Route path="/users" element={authUser ? <ManageUsers /> : <Navigate to="/login" />} />
         </Routes>
         <Toaster />
       </div>
