@@ -52,6 +52,8 @@ export const createPalika = async (req, res) => {
   }
 };
 
+
+//get methods
 export const getStates = async (req, res) => {
   try {
     const states = await State.find().sort({ StateId: 1 });
@@ -80,4 +82,24 @@ export const getAllDistricts = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch districts" });
   }
 };
+export const getPalikasByDistrictId = async (req, res) => {
+  const { DistrictId } = req.params;
+  try {
+    const palikas = await Palika.find({ DistrictId: parseInt(DistrictId) }).sort({ PalikaId: 1 });
+    res.status(200).json(palikas);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch palikas" });
+  }
+};
 
+
+
+export const getAllPalikas = async (req, res) => {
+  try {
+    const palikas = await Palika.find();
+    res.status(200).json(palikas);
+  } catch (error) {
+    console.error("Error fetching all Palikas:", error);
+    res.status(500).json({ message: "Failed to fetch Palikas" });
+  }
+};

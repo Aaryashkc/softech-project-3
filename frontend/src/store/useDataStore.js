@@ -41,5 +41,31 @@ export const useDataStore = create((set) => ({
     } finally {
       set({ loading: false });
     }
+  },
+
+
+
+  fetchPalikasByDistrictId: async (DistrictId) => {
+    try {
+      set({ loading: true });
+      const res = await axiosInstance.get(`/data/palikas/${DistrictId}`);
+      set({ palikas: res.data });
+    } catch (err) {
+      console.error("Error fetching palikas", err);
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  fetchAllPalikas: async () => {
+    try {
+      set({ loading: true });
+      const res = await axiosInstance.get("/data/palikas"); 
+      set({ allPalikas: res.data });
+    } catch (err) {
+      console.error("Error fetching all palikas", err);
+    } finally {
+      set({ loading: false });
+    }
   }
 }));
