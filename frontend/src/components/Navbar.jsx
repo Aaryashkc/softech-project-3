@@ -37,35 +37,31 @@ const Navbar = () => {
 
   return (
     <nav className="bg-slate-900 shadow-xl border-b border-slate-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center h-auto sm:h-16 py-2 sm:py-0 gap-2 sm:gap-0">
           {/* Logo/Brand */}
-          <div className="flex items-center">
-            <div className="flex items-center space-x-3">
-              <Link to="/" className="text-xl font-bold text-white">
-                Softech Foundation
-              </Link>
-            </div>
+          <div className="flex items-center justify-between">
+            <Link to="/" className="text-lg sm:text-xl font-bold text-white">
+              Softech Foundation
+            </Link>
           </div>
-          
           {/* Profile Section */}
-          <div className="flex items-center">
+          <div className="flex items-center justify-end">
             <div className="relative" ref={dropdownRef}>
               {/* Profile Button */}
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center space-x-3 text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors duration-200"
+                className="flex items-center space-x-2 sm:space-x-3 text-white hover:bg-slate-800 px-2 py-2 sm:px-3 sm:py-2 rounded-lg transition-colors duration-200 w-full sm:w-auto"
               >
                 {/* Avatar */}
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                   {getInitials(authUser.name || authUser.fullName)}
                 </div>
-                
-                {/* User Info */}
-                <div className="flex items-center space-x-2">
+                {/* User Info (hide email on xs) */}
+                <div className="hidden xs:flex items-center space-x-2">
                   <div className="text-right">
                     <div className="flex items-center space-x-2">
-                      <span className="text-xs text-slate-300">
+                      <span className="text-xs text-slate-300 truncate max-w-[80px]">
                         {authUser.email}
                       </span>
                       {isAdmin() && (
@@ -75,6 +71,14 @@ const Navbar = () => {
                       )}
                     </div>
                   </div>
+                  <ChevronDown 
+                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                      isDropdownOpen ? 'rotate-180' : ''
+                    }`} 
+                  />
+                </div>
+                {/* Chevron only on xs */}
+                <div className="flex xs:hidden">
                   <ChevronDown 
                     className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
                       isDropdownOpen ? 'rotate-180' : ''
@@ -96,7 +100,7 @@ const Navbar = () => {
                         <div className="text-sm font-medium text-white">
                           {authUser.name || authUser.fullName || 'User'}
                         </div>
-                        <div className="text-xs text-slate-400">
+                        <div className="text-xs text-slate-400 break-all">
                           {authUser.email}
                         </div>
                       </div>
@@ -105,7 +109,6 @@ const Navbar = () => {
 
                   {/* Menu Items */}
                   <div className="py-2">
-
                     {/* View Users (Admin only) */}
                     {isAdmin() && (
                       <button
@@ -122,10 +125,8 @@ const Navbar = () => {
                         </Link>
                       </button>
                     )}
-
                     {/* Divider */}
                     <div className="border-t border-slate-700 my-2"></div>
-
                     {/* Logout */}
                     <button
                       onClick={handleLogout}
