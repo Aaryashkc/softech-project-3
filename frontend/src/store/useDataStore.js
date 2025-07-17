@@ -5,6 +5,8 @@ export const useDataStore = create((set) => ({
   states: [],
   districts: [],
   allDistricts: [],
+  palikas: [],
+  allPalikas: [],
   loading: false,
 
   fetchStates: async () => {

@@ -5,9 +5,9 @@ export const createWebsite = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "Not authenticated" });
   }
-  const { software, startDate, endDate, state, district } = req.body;
+  const { software, startDate, endDate, state, district, palika } = req.body;
 
-  if (!software || !startDate || !endDate || !state || !district) {
+  if (!software || !startDate || !endDate || !state || !district || !palika) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -19,6 +19,7 @@ export const createWebsite = async (req, res) => {
       endDate,
       state,
       district,
+      palika,
     });
 
     res.status(201).json(website);
@@ -55,7 +56,7 @@ export const updateWebsite = async (req, res) => {
     return res.status(401).json({ message: "Not authenticated" });
   }
   const { id } = req.params;
-  const { software, startDate, endDate, state, district } = req.body;
+  const { software, startDate, endDate, state, district, palika } = req.body;
 
   try {
     const website = await Website.findById(id);
@@ -74,6 +75,7 @@ export const updateWebsite = async (req, res) => {
     website.endDate = endDate || website.endDate;
     website.state = state || website.state;
     website.district = district || website.district;
+    website.palika = palika || website.palika;
 
     await website.save();
     res.status(200).json(website);

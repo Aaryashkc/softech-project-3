@@ -27,6 +27,10 @@ const websiteSchema = mongoose.Schema(
       type: Number, 
       required: true,
     },
+    palika: {
+      type: Number, 
+      required: true,
+    },
   },
   { timestamps: true }
 );

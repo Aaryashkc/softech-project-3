@@ -7,7 +7,7 @@ import { useDataStore } from '../store/useDataStore';
 const AddData = () => {
   const navigate = useNavigate();
   const { createWebsite, isLoading } = useWebsiteStore();
-  const { states, districts, fetchStates, fetchDistrictsByStateId, loading: dataLoading } = useDataStore();
+  const { states, districts, palikas, fetchStates, fetchDistrictsByStateId, fetchPalikasByDistrictId, loading: dataLoading } = useDataStore();
 
   const [form, setForm] = useState({
     software: '',
@@ -15,6 +15,7 @@ const AddData = () => {
     endDate: '',
     state: '',
     district: '',
+    palika:'',
   });
 
   useEffect(() => {
@@ -26,6 +27,12 @@ const AddData = () => {
       fetchDistrictsByStateId(form.state);
     }
   }, [form.state, fetchDistrictsByStateId]);
+
+  useEffect(() => {
+    if (form.district) {
+      fetchPalikasByDistrictId(form.district);
+    }
+  }, [form.district, fetchPalikasByDistrictId]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -42,8 +49,7 @@ const AddData = () => {
         state: Number(form.state),
         district: Number(form.district),
       });
-      setForm({ software: '', startDate: '', endDate: '', state: '', district: '' });
-      // Navigate back to dashboard after successful creation
+      setForm({ software: '', startDate: '', endDate: '', state: '', district: '', palika:'' });
       navigate('/');
     } catch (error) {
       console.error('Error creating website:', error);
@@ -168,6 +174,46 @@ const AddData = () => {
                     {districts.map((district) => (
                       <option key={district.DistrictId} value={district.DistrictId} className="text-slate-700">
                         {district.DistrictName}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    {dataLoading ? (
+                      <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
+                  <MapPin className="w-4 h-4 text-slate-600" />
+                  Palika
+                </label>
+                <div className="relative">
+                  <select
+                    name="palika"
+                    value={form.palika}
+                    onChange={handleChange}
+                    className={`w-full border-2 rounded-xl px-4 py-3 focus:ring-4 focus:ring-blue-100 transition-all duration-200 appearance-none bg-white ${
+                      !form.district || dataLoading
+                        ? 'border-gray-200 text-slate-400 cursor-not-allowed'
+                        : 'border-gray-200 text-slate-700 focus:border-blue-500'
+                    }`}
+                    required
+                    disabled={!form.district || dataLoading}
+                  >
+                    <option value="" className="text-slate-400">
+                      {!form.district ? 'Select district first' : dataLoading ? 'Loading palikas...' : 'Choose a palika'}
+                    </option>
+                    {palikas.map((palika) => (
+                      <option key={palika.PalikaId} value={palika.PalikaId} className="text-slate-700">
+                        {palika.PalikaName}
                       </option>
                     ))}
                   </select>

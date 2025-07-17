@@ -8,14 +8,16 @@ import { useAuthStore } from '../store/useAuthStore';
 const Dashboard = () => {
   // Use stores for actual data
   const { websites, fetchWebsites, updateWebsite, deleteWebsite, isLoading } = useWebsiteStore();
-  const { states, allDistricts, fetchStates, fetchAllDistricts, loading: dataLoading } = useDataStore();
+  const { states, allDistricts, fetchStates, fetchAllDistricts, palikas, allPalikas, fetchPalikasByDistrictId, fetchAllPalikas, loading: dataLoading } = useDataStore();
   const { authUser, isAdmin } = useAuthStore();
 
-  const [districts, setDistricts] = useState([]);
+  const [districtsList, setDistrictsList] = useState([]);
+  const [palikaList, setPalikaList] = useState([]);
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [stateFilter, setStateFilter] = useState('');
   const [districtFilter, setDistrictFilter] = useState('');
+  const [palikaFilter, setPalikaFilter] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
 
@@ -24,21 +26,45 @@ const Dashboard = () => {
     fetchWebsites();
     fetchStates();
     fetchAllDistricts();
-  }, [fetchWebsites, fetchStates, fetchAllDistricts]);
+    fetchAllPalikas();
+  }, [fetchWebsites, fetchStates, fetchAllDistricts, fetchAllPalikas]);
 
   // Update districts when state filter changes
   useEffect(() => {
     if (stateFilter) {
       const filteredDistricts = allDistricts.filter(d => d.StateId === parseInt(stateFilter));
-      setDistricts(filteredDistricts);
+      setDistrictsList(filteredDistricts);
     } else {
-      setDistricts([]);
+      setDistrictsList([]);
     }
+    setDistrictFilter('');
+    setPalikaFilter('');
+    setPalikaList([]);
   }, [stateFilter, allDistricts]);
+
+  // Update palikas when district filter changes
+  useEffect(() => {
+    if (districtFilter) {
+      fetchPalikasByDistrictId(districtFilter);
+    } else {
+      setPalikaList([]);
+    }
+    setPalikaFilter('');
+  }, [districtFilter, fetchPalikasByDistrictId]);
+
+  // Sync palikaList with store
+  useEffect(() => {
+    if (districtFilter) {
+      setPalikaList(palikas);
+    } else {
+      setPalikaList([]);
+    }
+  }, [palikas, districtFilter]);
 
   // Helper functions
   const getStateName = (id) => states.find((s) => s.StateId === id)?.StateName || id;
   const getDistrictName = (id) => allDistricts.find((d) => d.DistrictId === id)?.DistrictName || id;
+  const getPalikaName = (id) => allPalikas.find((p) => p.PalikaId === id)?.PalikaName || id;
 
   // Check if user can edit/delete
   const canModify = (site) => {
@@ -50,13 +76,15 @@ const Dashboard = () => {
     const software = site.software?.toLowerCase() || '';
     const stateName = getStateName(site.state)?.toLowerCase() || '';
     const districtName = getDistrictName(site.district)?.toLowerCase() || '';
+    const palikaName = getPalikaName(site.palika)?.toLowerCase() || '';
     const q = search.toLowerCase();
-    
-    const matchesSearch = software.includes(q) || stateName.includes(q) || districtName.includes(q);
+
+    const matchesSearch = software.includes(q) || stateName.includes(q) || districtName.includes(q) || palikaName.includes(q);
     const matchesState = !stateFilter || site.state === parseInt(stateFilter);
     const matchesDistrict = !districtFilter || site.district === parseInt(districtFilter);
-    
-    return matchesSearch && matchesState && matchesDistrict;
+    const matchesPalika = !palikaFilter || site.palika === parseInt(palikaFilter);
+
+    return matchesSearch && matchesState && matchesDistrict && matchesPalika;
   });
 
   // Edit handlers
@@ -67,13 +95,25 @@ const Dashboard = () => {
       startDate: new Date(site.startDate).toISOString().split('T')[0],
       endDate: new Date(site.endDate).toISOString().split('T')[0],
       state: site.state,
-      district: site.district
+      district: site.district,
+      palika: site.palika || ''
     });
+    // Set districts and palikas for edit
+    const filteredDistricts = allDistricts.filter(d => d.StateId === site.state);
+    setDistrictsList(filteredDistricts);
+
+    // Set districtFilter and palikaFilter to match the site being edited
+    setDistrictFilter(site.district);
+    setPalikaFilter(site.palika || '');
+
+    fetchPalikasByDistrictId(site.district);
   };
 
   const cancelEdit = () => {
     setEditingId(null);
     setEditForm({});
+    setDistrictsList([]);
+    setPalikaList([]);
   };
 
   const saveEdit = async () => {
@@ -81,6 +121,8 @@ const Dashboard = () => {
       await updateWebsite(editingId, editForm);
       setEditingId(null);
       setEditForm({});
+      setDistrictsList([]);
+      setPalikaList([]);
     } catch (error) {
       console.error('Edit failed:', error);
     }
@@ -102,6 +144,9 @@ const Dashboard = () => {
     setSearch('');
     setStateFilter('');
     setDistrictFilter('');
+    setPalikaFilter('');
+    setDistrictsList([]);
+    setPalikaList([]);
   };
   
   return (
@@ -126,7 +171,7 @@ const Dashboard = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
-              placeholder="Search by software, state, or district..."
+              placeholder="Search by software, state, district, or palika..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
@@ -138,7 +183,6 @@ const Dashboard = () => {
             value={stateFilter}
             onChange={(e) => {
               setStateFilter(e.target.value);
-              setDistrictFilter(''); // Reset district when state changes
             }}
             className="px-2 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-[120px] sm:min-w-[200px] text-sm sm:text-base"
           >
@@ -153,28 +197,36 @@ const Dashboard = () => {
           {/* District Filter */}
           <select
             value={districtFilter}
-            onChange={(e) => setDistrictFilter(e.target.value)}
+            onChange={(e) => {
+              setDistrictFilter(e.target.value);
+            }}
             className="px-2 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-[120px] sm:min-w-[200px] text-sm sm:text-base"
             disabled={!stateFilter}
           >
             <option value="">All Districts</option>
-            {(stateFilter ? districts : allDistricts).map((district) => (
+            {(stateFilter ? districtsList : allDistricts).map((district) => (
               <option key={district._id} value={district.DistrictId}>
                 {district.DistrictName}
               </option>
             ))}
           </select>
 
+          {/* Palika Filter */}
+          <select
+            value={palikaFilter}
+            onChange={(e) => setPalikaFilter(e.target.value)}
+            className="px-2 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-[120px] sm:min-w-[200px] text-sm sm:text-base"
+            disabled={!districtFilter}
+          >
+            <option value="">All Palikas</option>
+            {(districtFilter ? palikaList : allPalikas).map((palika) => (
+              <option key={palika._id} value={palika.PalikaId}>
+                {palika.PalikaName}
+              </option>
+            ))}
+          </select>
+
           {/* Clear Filters */}
-          {(search || stateFilter || districtFilter) && (
-            <button
-              onClick={clearFilters}
-              className="px-2 py-2 sm:px-4 sm:py-3 text-gray-600 hover:text-gray-800 transition flex items-center gap-2 text-sm sm:text-base"
-            >
-              <X size={20} />
-              Clear
-            </button>
-          )}
         </div>
       </div>
 
@@ -193,13 +245,14 @@ const Dashboard = () => {
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold xs:table-cell">End Date</th>
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold">State</th>
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold xs:table-cell">District</th>
+                <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold xs:table-cell">Palika</th>
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-center font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredWebsites.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-6 sm:py-10 text-gray-400">
+                  <td colSpan={7} className="text-center py-6 sm:py-10 text-gray-400">
                     No data found.
                   </td>
                 </tr>
@@ -252,9 +305,10 @@ const Dashboard = () => {
                           value={editForm.state}
                           onChange={(e) => {
                             const stateId = parseInt(e.target.value);
-                            setEditForm({...editForm, state: stateId, district: ''});
+                            setEditForm({...editForm, state: stateId, district: '', palika: ''});
                             const filteredDistricts = allDistricts.filter(d => d.StateId === stateId);
-                            setDistricts(filteredDistricts);
+                            setDistrictsList(filteredDistricts);
+                            setPalikaList([]);
                           }}
                           className="w-full px-2 py-1 border rounded focus:ring-2 focus:ring-blue-500"
                         >
@@ -273,10 +327,14 @@ const Dashboard = () => {
                       {editingId === site._id ? (
                         <select
                           value={editForm.district}
-                          onChange={(e) => setEditForm({...editForm, district: parseInt(e.target.value)})}
+                          onChange={async (e) => {
+                            const districtId = parseInt(e.target.value);
+                            setEditForm({...editForm, district: districtId, palika: ''});
+                            await fetchPalikasByDistrictId(districtId);
+                          }}
                           className="w-full px-2 py-1 border rounded focus:ring-2 focus:ring-blue-500"
                         >
-                          {districts.map((district) => (
+                          {districtsList.map((district) => (
                             <option key={district._id} value={district.DistrictId}>
                               {district.DistrictName}
                             </option>
@@ -284,6 +342,26 @@ const Dashboard = () => {
                         </select>
                       ) : (
                         <span className="text-slate-600">{getDistrictName(site.district)}</span>
+                      )}
+                    </td>
+                    {/* Palika (hidden on xs) */}
+                    <td className="py-2 px-2 sm:py-4 sm:px-6 xs:table-cell">
+                      {editingId === site._id ? (
+                        <select
+                          value={editForm.palika}
+                          onChange={(e) => setEditForm({...editForm, palika: parseInt(e.target.value)})}
+                          className="w-full px-2 py-1 border rounded focus:ring-2 focus:ring-blue-500"
+                          required
+                        >
+                          <option value="">Select Palika</option>
+                          {palikaList.map((palika) => (
+                            <option key={palika._id} value={palika.PalikaId}>
+                              {palika.PalikaName}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <span className="text-slate-600">{getPalikaName(site.palika)}</span>
                       )}
                     </td>
                     {/* Actions */}
