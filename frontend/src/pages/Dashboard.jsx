@@ -190,9 +190,9 @@ const Dashboard = () => {
               <tr className="bg-slate-900 text-white">
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold">Software</th>
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold">Start Date</th>
-                <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold hidden xs:table-cell">End Date</th>
+                <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold xs:table-cell">End Date</th>
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold">State</th>
-                <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold hidden xs:table-cell">District</th>
+                <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold xs:table-cell">District</th>
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-center font-semibold">Actions</th>
               </tr>
             </thead>
@@ -233,7 +233,7 @@ const Dashboard = () => {
                       )}
                     </td>
                     {/* End Date (hidden on xs) */}
-                    <td className="py-2 px-2 sm:py-4 sm:px-6 hidden xs:table-cell">
+                    <td className="py-2 px-2 sm:py-4 sm:px-6 xs:table-cell">
                       {editingId === site._id ? (
                         <input
                           type="date"
@@ -269,7 +269,7 @@ const Dashboard = () => {
                       )}
                     </td>
                     {/* District (hidden on xs) */}
-                    <td className="py-2 px-2 sm:py-4 sm:px-6 hidden xs:table-cell">
+                    <td className="py-2 px-2 sm:py-4 sm:px-6 xs:table-cell">
                       {editingId === site._id ? (
                         <select
                           value={editForm.district}

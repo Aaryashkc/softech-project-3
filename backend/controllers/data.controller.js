@@ -1,5 +1,6 @@
 import State from "../models/state.model.js";
 import District from "../models/district.model.js";
+import Palika from "../models/palika.model.js";
 
 export const createState = async (req, res) => {
   try {
@@ -34,6 +35,22 @@ export const createDistrict = async (req, res) => {
   }
 };
 
+
+export const createPalika = async (req, res) => {
+  try {
+    const data = req.body;
+
+    if (!Array.isArray(data)) {
+      return res.status(400).json({ message: "Expected an array of Palika" });
+    }
+
+    const inserted = await Palika.insertMany(data);
+    res.status(201).json({ message: "Palika inserted", inserted });
+  } catch (error) {
+    console.error("Bulk Palika insert error:", error);
+    res.status(500).json({ message: "Failed to insert Palika" });
+  }
+};
 
 export const getStates = async (req, res) => {
   try {
