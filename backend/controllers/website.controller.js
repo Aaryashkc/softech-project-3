@@ -1,6 +1,5 @@
 import Website from "../models/website.model.js";
 
-// Create Website Entry
 export const createWebsite = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "Not authenticated" });
@@ -29,7 +28,6 @@ export const createWebsite = async (req, res) => {
   }
 };
 
-// Get All Website Entries (role-based)
 export const getWebsites = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "Not authenticated" });
@@ -50,7 +48,6 @@ export const getWebsites = async (req, res) => {
   }
 };
 
-// Update Website Entry
 export const updateWebsite = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "Not authenticated" });
@@ -62,7 +59,6 @@ export const updateWebsite = async (req, res) => {
     const website = await Website.findById(id);
     if (!website) return res.status(404).json({ message: "Website not found" });
 
-    // Only the creator or admin can update
     if (
       req.user.role !== "admin" &&
       website.user.toString() !== req.user._id.toString()
@@ -85,7 +81,6 @@ export const updateWebsite = async (req, res) => {
   }
 };
 
-// Delete Website Entry
 export const deleteWebsite = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: "Not authenticated" });
@@ -95,8 +90,6 @@ export const deleteWebsite = async (req, res) => {
   try {
     const website = await Website.findById(id);
     if (!website) return res.status(404).json({ message: "Not found" });
-
-    // Only the creator or admin can delete
     if (
       req.user.role !== "admin" &&
       website.user.toString() !== req.user._id.toString()

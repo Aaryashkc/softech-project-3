@@ -21,7 +21,7 @@ export const protectRoute = async (req, res, next) => {
       return res.status(401).json({ message: "Not authenticated, user not found" });
     }
     req.user = user;
-    req.userId = user._id; // Also set userId for compatibility
+    req.userId = user._id;
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
@@ -37,7 +37,6 @@ export const protectRoute = async (req, res, next) => {
 
 export const isAdmin = async (req, res, next) => {
   try {
-    // req.user is now set by protectRoute
     if (!req.user || req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied: Admins only" });
     }
