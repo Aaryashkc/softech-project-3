@@ -11,6 +11,9 @@ import { Toaster } from "react-hot-toast";
 import ManageUsers from "./pages/ManageUsers";
 import Inquires from "./pages/Inquires";
 import AddInquiries from "./pages/AddInquiries";
+import InTalks from "./components/InTalks";
+import Confirmed from "./components/Confirmed";
+import Cancelled from "./components/Cancelled";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, isAdmin } = useAuthStore();
@@ -39,6 +42,11 @@ const App = () => {
           <Route path="/users" element={authUser && isAdmin() ? <ManageUsers /> : <Navigate to="/" />} />
           <Route path="/inquiries" element={authUser && isAdmin() ? <Inquires /> : <Navigate to="/" />} />
           <Route path="/add-inquiry" element={authUser && isAdmin() ? <AddInquiries /> : <Navigate to="/" />} />
+
+          <Route path="/intalks" element={authUser && isAdmin() ? <InTalks /> : <Navigate to="/" />} />
+          <Route path="/confirmed" element={authUser && isAdmin() ? <Confirmed /> : <Navigate to="/" />} />
+          <Route path="/cancelled" element={authUser && isAdmin() ? <Cancelled /> : <Navigate to="/" />} />
+
         </Routes>
         <Toaster />
       </div>
