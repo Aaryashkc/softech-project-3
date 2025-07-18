@@ -13,7 +13,7 @@ const InquirySchema = new mongoose.Schema({
     type: Date, 
     default: Date.now 
   },
-  Software: { 
+  software: { 
     type: String, 
     required: true 
   },

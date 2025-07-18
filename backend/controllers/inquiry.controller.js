@@ -10,13 +10,13 @@ export const createInquiry = async (req, res) => {
     inquirerName,
     contactPerson,
     date,
-    Software,
+    software,
     status,
     activities,
     comments,
   } = req.body;
 
-  if (!inquirerName || !contactPerson || !date || !Software || !status) {
+  if (!inquirerName || !contactPerson || !date || !software || !status || !activities) {
     return res.status(400).json({ message: "All required fields must be provided" });
   }
 
@@ -26,9 +26,9 @@ export const createInquiry = async (req, res) => {
       inquirerName,
       contactPerson,
       date,
-      Software,
+      software,
       status,
-      activities: activities || [],
+      activities,
       comments,
     });
 
@@ -73,7 +73,7 @@ export const updateInquiry = async (req, res) => {
     inquirerName,
     contactPerson,
     date,
-    Software,
+    software,
     status,
     activities,
     comments,
@@ -94,7 +94,7 @@ export const updateInquiry = async (req, res) => {
     inquiry.inquirerName = inquirerName ?? inquiry.inquirerName;
     inquiry.contactPerson = contactPerson ?? inquiry.contactPerson;
     inquiry.date = date ?? inquiry.date;
-    inquiry.Software = Software ?? inquiry.Software;
+    inquiry.software = software ?? inquiry.software;
     inquiry.status = status ?? inquiry.status;
     inquiry.activities = activities ?? inquiry.activities;
     inquiry.comments = comments ?? inquiry.comments;
