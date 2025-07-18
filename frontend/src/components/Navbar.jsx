@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Users, LogOut} from 'lucide-react';
+import { ChevronDown, Users, LogOut, UserPen} from 'lucide-react';
 import { useAuthStore } from "../store/useAuthStore"
 import { Link } from 'react-router-dom';
 const Navbar = () => {
@@ -45,6 +45,7 @@ const Navbar = () => {
               Softech Foundation
             </Link>
           </div>
+
           {/* Profile Section */}
           <div className="flex items-center justify-end">
             <div className="relative" ref={dropdownRef}>
@@ -109,21 +110,29 @@ const Navbar = () => {
 
                   {/* Menu Items */}
                   <div className="py-2">
+                    {/* Leads */}
+                    <Link 
+                      to="/inquiries" 
+                      className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors duration-150"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <UserPen className="w-4 h-4" />
+                      <span>Leads</span>
+                    </Link>
+                    
+                    {/* Divider */}
+                    <div className="border-t border-slate-700 my-2"></div>
+                    
                     {/* View Users (Admin only) */}
                     {isAdmin() && (
-                      <button
-                        onClick={() => {
-                          // Add your users page navigation logic here
-                          console.log('Navigate to users');
-                          setIsDropdownOpen(false);
-                        }}
+                      <Link 
+                        to="/users" 
                         className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors duration-150"
+                        onClick={() => setIsDropdownOpen(false)}
                       >
                         <Users className="w-4 h-4" />
-                        <Link to="/users" className="flex-1">
-                          Manage Users
-                        </Link>
-                      </button>
+                        <span>Manage Users</span>
+                      </Link>
                     )}
                     {/* Divider */}
                     <div className="border-t border-slate-700 my-2"></div>

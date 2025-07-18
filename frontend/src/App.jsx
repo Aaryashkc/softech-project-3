@@ -9,11 +9,11 @@ import { useAuthStore } from "./store/useAuthStore";
 import Navbar from "./components/Navbar";
 import { Toaster } from "react-hot-toast";
 import ManageUsers from "./pages/ManageUsers";
-import Inquires from "./pages/Inquires";
 import AddInquiries from "./pages/AddInquiries";
 import InTalks from "./components/InTalks";
 import Confirmed from "./components/Confirmed";
 import Cancelled from "./components/Cancelled";
+import InquiryDashboard from "./pages/InquiryDashboard";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, isAdmin } = useAuthStore();
@@ -25,7 +25,7 @@ const App = () => {
   if (isCheckingAuth && !authUser) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <LoaderCircle className="size-16 animate-spin text-blue-600" />
+        <LoaderCircle className="size-16 animate-spin text-slate-700" />
       </div>
     );
   }
@@ -40,7 +40,7 @@ const App = () => {
           <Route path="/signup" element={authUser && isAdmin() ? <SignupPage /> : <Navigate to="/" />} />
           <Route path="/addclient" element={authUser ? <AddData /> : <Navigate to="/login" />} />
           <Route path="/users" element={authUser && isAdmin() ? <ManageUsers /> : <Navigate to="/" />} />
-          <Route path="/inquiries" element={authUser && isAdmin() ? <Inquires /> : <Navigate to="/" />} />
+          <Route path="/inquiries" element={authUser && isAdmin() ? <InquiryDashboard /> : <Navigate to="/" />} />
           <Route path="/add-inquiry" element={authUser && isAdmin() ? <AddInquiries /> : <Navigate to="/" />} />
 
           <Route path="/intalks" element={authUser && isAdmin() ? <InTalks /> : <Navigate to="/" />} />
