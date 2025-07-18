@@ -64,7 +64,10 @@ const Dashboard = () => {
   // Helper functions
   const getStateName = (id) => states.find((s) => s.StateId === id)?.StateName || id;
   const getDistrictName = (id) => allDistricts.find((d) => d.DistrictId === id)?.DistrictName || id;
-  const getPalikaName = (id) => allPalikas.find((p) => p.PalikaId === id)?.PalikaName || id;
+  const getPalikaName = (id) => {
+    const palika = allPalikas.find((p) => p.PalikaId === id);
+    return palika?.PalikaName ? String(palika.PalikaName) : (id ? String(id) : '');
+  };
 
   // Check if user can edit/delete
   const canModify = (site) => {
