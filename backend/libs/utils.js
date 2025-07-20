@@ -1,21 +1,15 @@
-import dotenv from 'dotenv';
-dotenv.config();
 import jwt from 'jsonwebtoken';
+import dotenv from "dotenv";
+dotenv.config();
 
-export const generateToken = (userId, res) => {
-  const token = jwt.sign(
-    { userId },
-    process.env.JWT_SECRET,
-    { expiresIn: '7d' }
-  );
+export const generateToken=(userId, res)=>{
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-  res.cookie('jwt', token, {
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  res.cookie('jwt', token, { 
+    maxAge: 1 * 24 * 60 * 60 * 1000,
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    domain: process.env.NODE_ENV === 'production' ? '.yourdomain.com' : undefined,
-    path: '/'
+    sameSite: process.env.NODE_ENV === 'development' ? "lax" : "none",
+    secure: process.env.NODE_ENV !== 'development'
   });
-  return token;
+  return token; 
 };
