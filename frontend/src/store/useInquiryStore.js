@@ -45,6 +45,21 @@ export const useInquiryStore = create((set, get) => ({
     }
   },
 
+  // Update inquiry status only
+  updateInquiryStatus: async (id, newStatus) => {
+    try {
+      const res = await axiosInstance.put(`/inquiry/${id}`, { status: newStatus });
+      set({
+        inquiries: get().inquiries.map((inq) =>
+          inq._id === id ? res.data : inq
+        ),
+      });
+      toast.success("Status updated");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Status update failed");
+    }
+  },
+
   // Delete a website
   deleteInquiry: async (id) => {
     try {

@@ -98,6 +98,10 @@ export const updateInquiry = async (req, res) => {
     inquiry.status = status ?? inquiry.status;
     inquiry.activities = activities ?? inquiry.activities;
     inquiry.comments = comments ?? inquiry.comments;
+    // Ensure user is preserved
+    if (!inquiry.user) {
+      inquiry.user = req.user._id;
+    }
 
     await inquiry.save();
 

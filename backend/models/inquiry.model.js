@@ -22,6 +22,11 @@ const InquirySchema = new mongoose.Schema({
     enum: ["in-talks", "confirmed", "canceled"],
     default: "in-talks",
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
   activities: [{ type: String }],
   comments: { type: String },
 });
