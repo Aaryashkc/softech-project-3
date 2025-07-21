@@ -7,4 +7,14 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss()
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'mui-vendor': ['@emotion/react', '@emotion/styled', '@mui/material'],
+        }
+      }
+    }
+  }
 })
