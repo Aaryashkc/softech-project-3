@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { LoaderCircle } from "lucide-react";
 import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
 import Dashboard from "./pages/Dashboard";
 import AddData from "./pages/AddData";
 import { useAuthStore } from "./store/useAuthStore";
@@ -21,9 +20,8 @@ const protectedRoutes = [
 
 const App = () => {
   const location = useLocation();
-  const { authUser, checkAuth, isCheckingAuth, isAdmin } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth} = useAuthStore();
 
-  // Check if current path is protected (but NOT /login)
   const isProtectedRoute = protectedRoutes.some(route =>
     location.pathname === route || location.pathname.startsWith(route)
   );
@@ -48,10 +46,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={authUser ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
-        <Route path="/signup" element={authUser && isAdmin() ? <SignupPage /> : <Navigate to="/" />} />
         <Route path="/addclient" element={authUser ? <AddData /> : <Navigate to="/login" />} />
-        <Route path="/users" element={authUser && isAdmin() ? <ManageUsers /> : <Navigate to="/" />} />
-        <Route path="/inquiries" element={authUser && isAdmin() ? <InquiryDashboard /> : <Navigate to="/" />} />
+        <Route path="/users" element={authUser ? <ManageUsers /> : <Navigate to="/" />} />
+        <Route path="/inquiries" element={authUser ? <InquiryDashboard /> : <Navigate to="/" />} />
       </Routes>
       <Toaster />
     </div>

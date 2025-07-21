@@ -76,7 +76,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.put(`/auth/promote/${userId}`);
       toast.success(res.data.message || "User promoted to admin");
-      // Refresh users list after promotion
+
       get().getAllUsers();
     } catch (error) {
       const msg = error?.response?.data?.message || "Promotion failed";
