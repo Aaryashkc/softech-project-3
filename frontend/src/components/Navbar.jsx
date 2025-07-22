@@ -112,12 +112,12 @@ const Navbar = () => {
                   <div className="py-2">
                     {/* Leads */}
                     <Link 
-                      to="/inquiries" 
+                      to="/websites" 
                       className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors duration-150"
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <UserPen className="w-4 h-4" />
-                      <span>Leads</span>
+                      <span>Websites</span>
                     </Link>
                     
                     {/* Divider */}
