@@ -11,7 +11,7 @@ const AddData = () => {
 
   const [form, setForm] = useState({
     software: '',
-    startDate: '',
+    startDate: new Date().toISOString().split('T')[0],
     endDate: '',
     state: '',
     district: '',
