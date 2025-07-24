@@ -44,11 +44,11 @@ const App = () => {
     <div>
       <Navbar />
       <Routes>
-        <Route path="/websites" element={authUser ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/websites" element={authUser ? <Dashboard /> : <Navigate to="/" />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/addclient" element={authUser ? <AddData /> : <Navigate to="/login" />} />
         <Route path="/users" element={authUser ? <ManageUsers /> : <Navigate to="/" />} />
-        <Route path="/" element={authUser ? <InquiryDashboard /> : <Navigate to="/" />} />
+        <Route path="/" element={authUser ? <InquiryDashboard /> : <Navigate to="/login" />} />
       </Routes>
       <Toaster />
     </div>
