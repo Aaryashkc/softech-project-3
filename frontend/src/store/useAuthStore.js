@@ -23,7 +23,6 @@ export const useAuthStore = create((set, get) => ({
       set({ authUser: res.data });
     } catch (error) {
       set({ authUser: null });
-      console.error("checkAuth error:", error);
     } finally {
       set({ isCheckingAuth: false });
     }

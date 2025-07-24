@@ -145,8 +145,20 @@ const EditInquiryForm = ({ initialData, onSubmit, onCancel }) => {
             <input type="text" required value={formData.inquirerName} onChange={e => setFormData({ ...formData, inquirerName: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Contact Person *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Contacted Person *</label>
             <input type="text" required value={formData.contactPerson} onChange={e => setFormData({ ...formData, contactPerson: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Contact Person Email *</label>
+            <input type="email" required value={formData.contactPersonEmail} onChange={e => setFormData({ ...formData, contactPersonEmail: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+            <input type="text" required value={formData.phoneNumber} onChange={e => setFormData({ ...formData, phoneNumber: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Address *</label>
+            <input type="text" required value={formData.address} onChange={e => setFormData({ ...formData, address: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Date *</label>
@@ -166,7 +178,7 @@ const EditInquiryForm = ({ initialData, onSubmit, onCancel }) => {
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Activities (one per line) *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Activities *</label>
           <textarea required value={formData.activities} onChange={e => setFormData({ ...formData, activities: e.target.value })} rows={4} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
         <div>
@@ -204,7 +216,7 @@ const InquiryTable = ({ inquiries, onStatusChange, onDelete, onView, onEdit, sta
                 Inquirer
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Contact
+                Contacted Person
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Software
@@ -274,9 +286,13 @@ const InquiryTable = ({ inquiries, onStatusChange, onDelete, onView, onEdit, sta
 
 // Add Inquiry Form Component
 const AddInquiryForm = ({ onSubmit, onCancel }) => {
+  const { softwareSuggestions, fetchSoftwareSuggestions } = useInquiryStore();
   const [formData, setFormData] = useState({
     inquirerName: '',
     contactPerson: '',
+    contactPersonEmail: '',
+    phoneNumber: '',
+    address: '',
     date: new Date().toISOString().split('T')[0],
     software: '',
     status: 'in-talks',
@@ -291,6 +307,10 @@ const AddInquiryForm = ({ onSubmit, onCancel }) => {
     };
     onSubmit(data);
   };
+
+  useEffect(() => {
+    fetchSoftwareSuggestions();
+  }, [fetchSoftwareSuggestions]);
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
@@ -313,13 +333,52 @@ const AddInquiryForm = ({ onSubmit, onCancel }) => {
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Contact Person *
+              Contacted Person *
             </label>
             <input
               type="text"
               required
               value={formData.contactPerson}
               onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Contacted Person Name"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Contact Person Email*
+            </label>
+            <input
+              type="email"
+              required
+              value={formData.contactPersonEmail}
+              onChange={(e) => setFormData({...formData, contactPersonEmail: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Email"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Phone Number *
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.phoneNumber}
+              onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Email or phone number"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Address *
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.address}
+              onChange={(e) => setFormData({...formData, address: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Email or phone number"
             />
@@ -349,7 +408,13 @@ const AddInquiryForm = ({ onSubmit, onCancel }) => {
               onChange={(e) => setFormData({...formData, software: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Software/service type"
+              list="software-suggestions"
             />
+            <datalist id="software-suggestions">
+              {softwareSuggestions.map((suggestion) => (
+                <option key={suggestion} value={suggestion} />
+              ))}
+            </datalist>
           </div>
           
           <div>
@@ -595,7 +660,37 @@ const InquiryDashboard = () => {
               {selectedInquiry && (
                 <div className="space-y-6">
                   <div>
-                    <span className="font-semibold">Activities:</span>
+                    <span className="font-semibold">Email:</span>
+                    <ul className="list-disc ml-6 mt-1">
+                      {selectedInquiry.contactPersonEmail && selectedInquiry.contactPersonEmail.length > 0 ? (
+                        (Array.isArray(selectedInquiry.contactPersonEmail) ? selectedInquiry.contactPersonEmail : [selectedInquiry.contactPersonEmail]).map((email, idx) => <li key={idx}>{email}</li>)
+                      ) : (
+                        <li className="text-gray-400">No email listed</li>
+                      )}
+                    </ul>
+                  </div>
+                  <div>
+                    <span className="font-semibold">Phone Number:</span>
+                    <ul className="list-disc ml-6 mt-1">
+                      {selectedInquiry.phoneNumber && selectedInquiry.phoneNumber.length > 0 ? (
+                        (Array.isArray(selectedInquiry.phoneNumber) ? selectedInquiry.phoneNumber : [selectedInquiry.phoneNumber]).map((phone, idx) => <li key={idx}>{phone}</li>)
+                      ) : (
+                        <li className="text-gray-400">No Phone Number listed</li>
+                      )}
+                    </ul>
+                  </div>
+                  <div>
+                    <span className="font-semibold">Address:</span>
+                    <ul className="list-disc ml-6 mt-1">
+                      {selectedInquiry.address && selectedInquiry.address.length > 0 ? (
+                        (Array.isArray(selectedInquiry.address) ? selectedInquiry.address : [selectedInquiry.address]).map((addr, idx) => <li key={idx}>{addr}</li>)
+                      ) : (
+                        <li className="text-gray-400">No address listed</li>
+                      )}
+                    </ul>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-red-700">Activities:</span>
                     <ul className="list-disc ml-6 mt-1">
                       {selectedInquiry.activities && selectedInquiry.activities.length > 0 ? (
                         selectedInquiry.activities.map((act, idx) => <li key={idx}>{act}</li>)

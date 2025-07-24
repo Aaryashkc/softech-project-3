@@ -5,6 +5,7 @@ import { axiosInstance } from "../libs/axios.js";
 
 export const useInquiryStore = create((set, get) => ({
   inquiries: [],
+  softwareSuggestions: [],
   isLoading: false,
 
   fetchInquiries: async () => {
@@ -70,6 +71,15 @@ export const useInquiryStore = create((set, get) => ({
       toast.success("inquiry deleted");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Delete failed");
+    }
+  },
+
+  fetchSoftwareSuggestions: async () => {
+    try {
+      const res = await axiosInstance.get("/inquiry/suggestions/software");
+      set({ softwareSuggestions: res.data });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to fetch software suggestions");
     }
   },
 }));

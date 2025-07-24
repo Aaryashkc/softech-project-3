@@ -9,6 +9,9 @@ export const createInquiry = async (req, res) => {
   const {
     inquirerName,
     contactPerson,
+    contactPersonEmail,
+    phoneNumber,
+    address,
     date,
     software,
     status,
@@ -16,7 +19,18 @@ export const createInquiry = async (req, res) => {
     comments,
   } = req.body;
 
-  if (!inquirerName || !contactPerson || !date || !software || !status || !activities) {
+  // Check required fields
+  if (
+    !inquirerName ||
+    !contactPerson ||
+    !contactPersonEmail ||
+    !phoneNumber ||
+    !address ||
+    !date ||
+    !software ||
+    !status ||
+    !activities
+  ) {
     return res.status(400).json({ message: "All required fields must be provided" });
   }
 
@@ -25,6 +39,9 @@ export const createInquiry = async (req, res) => {
       user: req.user._id,
       inquirerName,
       contactPerson,
+      contactPersonEmail,
+      phoneNumber,
+      address,
       date,
       software,
       status,
@@ -72,6 +89,9 @@ export const updateInquiry = async (req, res) => {
   const {
     inquirerName,
     contactPerson,
+    contactPersonEmail,
+    phoneNumber,
+    address,
     date,
     software,
     status,
@@ -93,12 +113,15 @@ export const updateInquiry = async (req, res) => {
     // Update fields if provided
     inquiry.inquirerName = inquirerName ?? inquiry.inquirerName;
     inquiry.contactPerson = contactPerson ?? inquiry.contactPerson;
+    inquiry.contactPersonEmail = contactPersonEmail ?? inquiry.contactPersonEmail;
+    inquiry.phoneNumber = phoneNumber ?? inquiry.phoneNumber;
+    inquiry.address = address ?? inquiry.address;
     inquiry.date = date ?? inquiry.date;
     inquiry.software = software ?? inquiry.software;
     inquiry.status = status ?? inquiry.status;
     inquiry.activities = activities ?? inquiry.activities;
     inquiry.comments = comments ?? inquiry.comments;
-    // Ensure user is preserved
+
     if (!inquiry.user) {
       inquiry.user = req.user._id;
     }
@@ -137,5 +160,20 @@ export const deleteInquiry = async (req, res) => {
   } catch (error) {
     console.error("Error deleting inquiry:", error);
     res.status(500).json({ message: "Failed to delete inquiry" });
+  }
+};
+
+// Get unique software suggestions
+export const getSoftwareSuggestions = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  try {
+    const software = await Inquiry.distinct("software");
+    res.status(200).json(software);
+  } catch (error) {
+    console.error("Error fetching software suggestions:", error);
+    res.status(500).json({ message: "Failed to fetch software suggestions" });
   }
 };

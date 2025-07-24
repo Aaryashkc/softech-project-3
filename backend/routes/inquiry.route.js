@@ -1,8 +1,10 @@
 import express from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
-import { createInquiry, deleteInquiry, getInquiries, updateInquiry } from "../controllers/inquiry.controller.js";
+import { createInquiry, deleteInquiry, getInquiries, updateInquiry, getSoftwareSuggestions } from "../controllers/inquiry.controller.js";
 
 const router = express.Router();
+
+router.get("/suggestions/software", protectRoute, getSoftwareSuggestions);
 
 router.get("/", protectRoute, getInquiries);
 
