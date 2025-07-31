@@ -9,6 +9,7 @@ import Navbar from "./components/Navbar";
 import { Toaster } from "react-hot-toast";
 import ManageUsers from "./pages/ManageUsers";
 import InquiryDashboard from "./pages/InquiryDashboard";
+import InquiryActionsPage from "./components/InquiryActionPage";
 
 const protectedRoutes = [
   "/", 
@@ -49,6 +50,8 @@ const App = () => {
         <Route path="/addclient" element={authUser ? <AddData /> : <Navigate to="/login" />} />
         <Route path="/users" element={authUser ? <ManageUsers /> : <Navigate to="/" />} />
         <Route path="/" element={authUser ? <InquiryDashboard /> : <Navigate to="/login" />} />
+        {/* i will remove this later */}
+        <Route path="/inquiry/:id/actions" element={authUser ? <InquiryActionsPage /> : <Navigate to="/login" />} /> 
       </Routes>
       <Toaster />
     </div>

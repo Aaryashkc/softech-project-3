@@ -2,7 +2,6 @@ import { create } from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../libs/axios.js";
 
-
 export const useInquiryStore = create((set, get) => ({
   inquiries: [],
   softwareSuggestions: [],
@@ -20,7 +19,6 @@ export const useInquiryStore = create((set, get) => ({
     }
   },
 
-  // Create new website entry
   createInquiry: async (data) => {
     try {
       const res = await axiosInstance.post("/inquiry", data);
@@ -31,7 +29,6 @@ export const useInquiryStore = create((set, get) => ({
     }
   },
 
-  // Update a website
   updateInquiry: async (id, data) => {
     try {
       const res = await axiosInstance.put(`/inquiry/${id}`, data);
@@ -40,13 +37,12 @@ export const useInquiryStore = create((set, get) => ({
           site._id === id ? res.data : site
         ),
       });
-      toast.success("inquiry updated");
+      toast.success("Inquiry updated");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Update failed");
     }
   },
 
-  // Update inquiry status only
   updateInquiryStatus: async (id, newStatus) => {
     try {
       const res = await axiosInstance.put(`/inquiry/${id}`, { status: newStatus });
@@ -61,14 +57,13 @@ export const useInquiryStore = create((set, get) => ({
     }
   },
 
-  // Delete a website
   deleteInquiry: async (id) => {
     try {
       await axiosInstance.delete(`/inquiry/${id}`);
       set({
         inquiries: get().inquiries.filter((site) => site._id !== id),
       });
-      toast.success("inquiry deleted");
+      toast.success("Inquiry deleted");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Delete failed");
     }
@@ -80,6 +75,32 @@ export const useInquiryStore = create((set, get) => ({
       set({ softwareSuggestions: res.data });
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to fetch software suggestions");
+    }
+  },
+
+  // Add Action to Inquiry
+  addActionToInquiry: async (inquiryId, actionData) => {
+    try {
+      const res = await axiosInstance.post(`/inquiry/${inquiryId}/actions`, actionData);
+      set({
+        inquiries: get().inquiries.map((inq) =>
+          inq._id === inquiryId ? { ...inq, actions: res.data } : inq
+        ),
+      });
+      toast.success("Action added");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add action");
+    }
+  },
+
+  // Get Actions for Inquiry
+  fetchActionsForInquiry: async (inquiryId) => {
+    try {
+      const res = await axiosInstance.get(`/inquiry/${inquiryId}/actions`);
+      return res.data; // Use this in component state if needed
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to fetch actions");
+      return [];
     }
   },
 }));

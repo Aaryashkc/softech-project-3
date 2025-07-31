@@ -177,3 +177,37 @@ export const getSoftwareSuggestions = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch software suggestions" });
   }
 };
+
+//add action to inquiry
+export const addActionToInquiry = async (req, res) => {
+  const { type, note, date } = req.body;
+
+  try {
+    const inquiry = await Inquiry.findById(req.params.id);
+    if (!inquiry) return res.status(404).json({ message: "Inquiry not found" });
+
+    // Create action object with only the fields that exist in the schema
+    const actionData = { type, note };
+    
+    // If date is provided, we can store it in a custom field or handle it differently
+    // For now, we'll just use the createdAt field which is automatically set
+    inquiry.actions.push(actionData);
+    await inquiry.save();
+
+    res.status(200).json(inquiry.actions); 
+  } catch (err) {
+    console.error("Error adding action:", err);
+    res.status(500).json({ message: "Failed to add action", error: err.message });
+  }
+};
+
+export const getActionsForInquiry = async (req, res) => {
+  try {
+    const inquiry = await Inquiry.findById(req.params.id).select("actions");
+    if (!inquiry) return res.status(404).json({ message: "Inquiry not found" });
+
+    res.status(200).json(inquiry.actions);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to get actions", error: err });
+  }
+};

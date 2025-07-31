@@ -1,5 +1,15 @@
 import mongoose from "mongoose";
 
+const actionSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ["meeting", "demo", "call", "follow-up", "note", "other"],
+    required: true,
+  },
+  note: { type: String, trim: true },
+  createdAt: { type: Date, default: Date.now }
+}, { _id: false });
+
 const InquirySchema = new mongoose.Schema({
   inquirerName: {
     type: String,
@@ -53,7 +63,8 @@ const InquirySchema = new mongoose.Schema({
   comments: { 
     type: String,
     trim: true
-  }
+  },
+  actions: [actionSchema]
 });
 
 const inquiry = mongoose.model("Inquiry", InquirySchema);

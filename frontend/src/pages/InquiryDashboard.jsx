@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, MessageCircle, CheckCircle, XCircle, Trash2, Calendar, User, Mail, Eye, RotateCcw} from 'lucide-react';
+import { Plus, MessageCircle, CheckCircle, XCircle, Trash2, Calendar, User, Mail, Eye, RotateCcw, PlusCircle} from 'lucide-react';
 import { useInquiryStore } from "../store/useInquiryStore";
 import toast from "react-hot-toast";
+import { Link } from 'react-router-dom';
 
 // Status Badge Component
 const StatusBadge = ({ status }) => {
@@ -273,6 +274,11 @@ const InquiryTable = ({ inquiries, onStatusChange, onDelete, onView, onEdit, sta
                     <button onClick={() => onEdit(inquiry)} className="text-yellow-600 hover:text-yellow-900 p-1 rounded" title="Edit Inquiry"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487a2.1 2.1 0 1 1 2.97 2.97L7.5 19.789l-4 1 1-4 14.362-14.302z" /></svg></button>
                     <StatusChangeButton currentStatus={inquiry.status} onStatusChange={(newStatus) => onStatusChange(inquiry._id, newStatus)} loading={statusLoadingId === inquiry._id} />
                     <button onClick={() => onDelete(inquiry._id)} className="text-red-600 hover:text-red-900 p-1 rounded" title="Delete"><Trash2 size={16} /></button>
+                       <Link to={`/inquiry/${inquiry._id}/actions`} title="Add/View Actions">
+                        <button className="text-green-600 hover:text-green-800 p-1 rounded">
+                          <PlusCircle size={16} />
+                        </button>
+                      </Link>
                   </div>
                 </td>
               </tr>
