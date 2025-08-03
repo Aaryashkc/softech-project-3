@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.route.js'
 import websiteRoutes from './routes/website.route.js';
 import dataRoutes from './routes/data.route.js';
 import InquiryRoutes from './routes/inquiry.route.js';
+import dashboardRoutes from './routes/dashboard.route.js';
 
 
 import connectDB from './libs/mongodb.js';
@@ -26,6 +27,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/website', websiteRoutes);
 app.use('/api/data', dataRoutes);
 app.use('/api/inquiry', InquiryRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.listen(PORT, ()=>{
     console.log(`Server is running on port ${PORT}`);
