@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Users, LogOut, UserPen} from 'lucide-react';
+import { ChevronDown, Users, LogOut, UserPen, Contact} from 'lucide-react';
 import { useAuthStore } from "../store/useAuthStore"
 import { Link } from 'react-router-dom';
 const Navbar = () => {
@@ -118,6 +118,16 @@ const Navbar = () => {
                     >
                       <UserPen className="w-4 h-4" />
                       <span>Websites</span>
+                    </Link>
+                     {/* Divider */}
+                    <div className="border-t border-slate-700 my-2"></div>
+                    <Link 
+                      to="/inquiries" 
+                      className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors duration-150"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <Contact className="w-4 h-4" />
+                      <span>Inquiries</span>
                     </Link>
                     
                     {/* Divider */}

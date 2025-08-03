@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import ManageUsers from "./pages/ManageUsers";
 import InquiryDashboard from "./pages/InquiryDashboard";
 import InquiryActionsPage from "./components/InquiryActionPage";
+import MainDashboard from "./pages/MainDashboard";
 
 const protectedRoutes = [
   "/", 
@@ -45,12 +46,13 @@ const App = () => {
     <div>
       <Navbar />
       <Routes>
-        <Route path="/websites" element={authUser ? <Dashboard /> : <Navigate to="/" />} />
+        <Route path="/websites" element={authUser ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/addclient" element={authUser ? <AddData /> : <Navigate to="/login" />} />
-        <Route path="/users" element={authUser ? <ManageUsers /> : <Navigate to="/" />} />
-        <Route path="/" element={authUser ? <InquiryDashboard /> : <Navigate to="/login" />} />
-        {/* i will remove this later */}
+        <Route path="/users" element={authUser ? <ManageUsers /> : <Navigate to="/login" />} />
+        <Route path="/inquiries" element={authUser ? <InquiryDashboard /> : <Navigate to="/login" />} />
+        <Route path="/" element={authUser ? <MainDashboard/> : <Navigate to="/login" />} />
+
         <Route path="/inquiry/:id/actions" element={authUser ? <InquiryActionsPage /> : <Navigate to="/login" />} /> 
       </Routes>
       <Toaster />

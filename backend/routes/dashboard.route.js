@@ -6,11 +6,14 @@ import {
   getMonthlyInquiries,
   getActionStats,
   getWebsitesByLocation,
-  getConversionFunnel
+  getConversionFunnel,
+  getSoftwareStats,        
+  getRecentActivities      
 } from "../controllers/dashboard.controller.js";
 
 const router = express.Router();
 
+// Existing routes (enhanced but backward compatible)
 router.get("/inquiry-summary", protectRoute, getInquirySummary);
 router.get("/inquiries-by-status", protectRoute, getInquiriesByStatus);
 router.get("/monthly-inquiries", protectRoute, getMonthlyInquiries);
@@ -18,5 +21,7 @@ router.get("/action-stats", protectRoute, getActionStats);
 router.get("/conversion-funnel", protectRoute, getConversionFunnel);
 
 router.get("/websites-by-location", protectRoute, getWebsitesByLocation);
+router.get("/software-stats", protectRoute, getSoftwareStats);
+router.get("/recent-activities", protectRoute, getRecentActivities);
 
 export default router;
