@@ -13,7 +13,7 @@ export const useDashboardStore = create((set, get) => ({
     states: [],
     districts: [],
     palikas: [],
-    softwareStats: [],    
+    websiteStatus: {}
   },
   softwareStats: {          
     inquiries: [],
@@ -248,23 +248,25 @@ export const useDashboardStore = create((set, get) => ({
 
     set({ loading: true, error: null });
 
-    try {
-      await Promise.allSettled([
-        fetchInquirySummary(),
-        fetchInquiriesByStatus(),
-        fetchMonthlyInquiries(),
-        fetchActionStats(),
-        fetchConversionFunnel(),
-        fetchWebsitesByLocation(),
-        fetchSoftwareStats(),
-        fetchRecentActivities()
-      ]);
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+    const results = await Promise.allSettled([
+      fetchInquirySummary(),
+      fetchInquiriesByStatus(),
+      fetchMonthlyInquiries(),
+      fetchActionStats(),
+      fetchConversionFunnel(),
+      fetchWebsitesByLocation(),
+      fetchSoftwareStats(),
+      fetchRecentActivities()
+    ]);
+
+    // Check for any rejected promises
+    const rejectedResults = results.filter(result => result.status === 'rejected');
+    if (rejectedResults.length > 0) {
+      console.error('Some dashboard data failed to load:', rejectedResults);
       toast.error('Some dashboard data failed to load');
-    } finally {
-      set({ loading: false });
     }
+
+    set({ loading: false });
   },
 
   // Selective data fetching for performance
@@ -311,11 +313,37 @@ export const useDashboardStore = create((set, get) => ({
       recent: get().fetchRecentActivities
     };
 
-    if (dataTypes.length === 0) {
-      await get().fetchAllData();
-    } else {
-      const promises = dataTypes.map(type => functions[type]?.());
-      await Promise.allSettled(promises.filter(Boolean));
+    try {
+      if (dataTypes.length === 0) {
+        await get().fetchAllData();
+      } else {
+        // Validate data types
+        const validTypes = Object.keys(functions);
+        const invalidTypes = dataTypes.filter(type => !validTypes.includes(type));
+        
+        if (invalidTypes.length > 0) {
+          console.warn('Invalid data types provided:', invalidTypes);
+          toast.error('Some data types are invalid');
+        }
+
+        const validPromises = dataTypes
+          .filter(type => validTypes.includes(type))
+          .map(type => functions[type]?.())
+          .filter(Boolean);
+
+        if (validPromises.length > 0) {
+          const results = await Promise.allSettled(validPromises);
+          const rejectedResults = results.filter(result => result.status === 'rejected');
+          
+          if (rejectedResults.length > 0) {
+            console.error('Some data refresh operations failed:', rejectedResults);
+            toast.error('Some data failed to refresh');
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+      toast.error('Failed to refresh data');
     }
   },
 

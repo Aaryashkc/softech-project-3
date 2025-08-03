@@ -182,10 +182,9 @@ const MainDashboard = () => {
         <div className="mb-10">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-700 to-blue-900 bg-clip-text text-transparent mb-2">
                 Analytics Dashboard
               </h1>
-              <p className="text-gray-600 text-lg">Track your business performance and insights</p>
             </div>
             <div className="flex items-center space-x-3">
               <div className="bg-white rounded-full p-3 shadow-lg">
@@ -444,7 +443,7 @@ const MainDashboard = () => {
                 <p className="text-lg font-medium">No conversion data available</p>
                 <p className="text-sm mt-2">Conversion funnel data will appear here when available</p>
                 <button
-                  onClick={() => useDashboardStore.getState().fetchConversionFunnel()}
+                  onClick={() => fetchConversionFunnel()}
                   className="mt-4 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
                 >
                   Retry
@@ -452,7 +451,6 @@ const MainDashboard = () => {
               </div>
             ) : (
               <div className="h-[400px]">
-                {console.log('Conversion Funnel Data:', conversionFunnel)}
                 <div className="w-full h-full flex flex-col">
                   <div className="text-sm text-gray-500 mb-2 text-center">
                     {conversionFunnel.length} stages loaded

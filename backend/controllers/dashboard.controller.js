@@ -10,8 +10,12 @@ export const getInquirySummary = async (req, res) => {
     const now = new Date();
     const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const previousMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+    
+    // Fix January edge case for previous month calculation
+    const previousMonth = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
+    const previousYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+    const previousMonthStart = new Date(previousYear, previousMonth, 1);
+    const previousMonthEnd = new Date(previousYear, previousMonth + 1, 0);
 
     // Overall totals (all time)
     const [totalInquiries, inquiriesWithActions, confirmed, canceled, inTalks] = await Promise.all([

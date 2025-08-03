@@ -23,7 +23,6 @@ export const useInquiryStore = create((set, get) => ({
     try {
       const res = await axiosInstance.post("/inquiry", data);
       set({ inquiries: [res.data, ...get().inquiries] });
-      toast.success("Inquiry created");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Creation failed");
     }
@@ -63,7 +62,6 @@ export const useInquiryStore = create((set, get) => ({
       set({
         inquiries: get().inquiries.filter((site) => site._id !== id),
       });
-      toast.success("Inquiry deleted");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Delete failed");
     }
@@ -87,7 +85,6 @@ export const useInquiryStore = create((set, get) => ({
           inq._id === inquiryId ? { ...inq, actions: res.data } : inq
         ),
       });
-      toast.success("Action added");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to add action");
     }
