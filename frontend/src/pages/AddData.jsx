@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, MapPin, Monitor, Plus, Clock } from 'lucide-react';
+import { Calendar, MapPin, Monitor, Plus, Clock, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWebsiteStore } from '../store/useWebsiteStore';
 import { useDataStore } from '../store/useDataStore';
@@ -16,6 +16,7 @@ const AddData = () => {
     state: '',
     district: '',
     palika:'',
+    sector: 'local-municipality',
   });
 
   useEffect(() => {
@@ -49,8 +50,8 @@ const AddData = () => {
         state: Number(form.state),
         district: Number(form.district),
       });
-      setForm({ software: '', startDate: '', endDate: '', state: '', district: '', palika:'' });
-      navigate('/');
+      setForm({ software: '', startDate: '', endDate: '', state: '', district: '', palika:'' , sector: 'local-municipality' });
+      navigate('/websites');
     } catch (error) {
       console.error('Error creating website:', error);
     }
@@ -228,6 +229,49 @@ const AddData = () => {
                   </div>
                 </div>
               </div>
+
+
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
+                  <Globe className="w-4 h-4 text-blue-600" />
+                  Sector
+                </label>
+                <select
+                  name="sector"
+                  value={form.sector}
+                  onChange={handleChange}
+                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-slate-700 placeholder-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200"
+                  required
+                >
+                  <option value="">Select a sector</option>
+                  <option value="local-municipality">Local Municipality</option>
+                  <option value="hospital">Hospital</option>
+                  <option value="school">School</option>
+                  <option value="college">College</option>
+                  <option value="university">University</option>
+                  <option value="ngo">NGO</option>
+                  <option value="government">Government</option>
+                  <option value="corporate">Corporate</option>
+                  <option value="ecommerce">E-commerce</option>
+                  <option value="restaurant">Restaurant</option>
+                  <option value="hotel">Hotel</option>
+                  <option value="travel-agency">Travel Agency</option>
+                  <option value="it-company">IT Company</option>
+                  <option value="finance-bank">Finance / Bank</option>
+                  <option value="real-estate">Real Estate</option>
+                  <option value="personal-portfolio">Personal Portfolio</option>
+                  <option value="media-news">Media / News</option>
+                  <option value="manufacturing">Manufacturing</option>
+                  <option value="construction">Construction</option>
+                  <option value="healthcare-clinic">Healthcare Clinic</option>
+                  <option value="law-firm">Law Firm</option>
+                  <option value="education-center">Education Center</option>
+                  <option value="automobile">Automobile</option>
+                  <option value="retail-store">Retail Store</option>
+                  <option value="logistics">Logistics</option>
+                </select>
+              </div>
+
             </div>
 
             {/* Submit Button */}

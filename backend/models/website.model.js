@@ -32,6 +32,37 @@ const websiteSchema = mongoose.Schema(
       type: Number, 
       required: true,
     },
+    sector: {
+  type: String,
+  enum: [
+    "local-municipality",
+    "hospital",
+    "school",
+    "college",
+    "university",
+    "ngo",
+    "government",
+    "corporate",
+    "ecommerce",
+    "restaurant",
+    "hotel",
+    "travel-agency",
+    "it-company",
+    "finance-bank",
+    "real-estate",
+    "personal-portfolio",
+    "media-news",
+    "manufacturing",
+    "construction",
+    "healthcare-clinic",
+    "law-firm",
+    "education-center",
+    "automobile",
+    "retail-store",
+    "logistics"
+  ],
+  default: "local-municipality"
+}
   },
   { timestamps: true }
 );

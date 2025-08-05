@@ -80,9 +80,10 @@ const Dashboard = () => {
     const stateName = getStateName(site.state)?.toLowerCase() || '';
     const districtName = getDistrictName(site.district)?.toLowerCase() || '';
     const palikaName = getPalikaName(site.palika)?.toLowerCase() || '';
+    const sectorName = getPalikaName(site.sector)?.toLowerCase() || '';
     const q = search.toLowerCase();
 
-    const matchesSearch = software.includes(q) || stateName.includes(q) || districtName.includes(q) || palikaName.includes(q);
+    const matchesSearch = software.includes(q) || stateName.includes(q) || districtName.includes(q) || palikaName.includes(q) || sectorName.includes(q);
     const matchesState = !stateFilter || site.state === parseInt(stateFilter);
     const matchesDistrict = !districtFilter || site.district === parseInt(districtFilter);
     const matchesPalika = !palikaFilter || site.palika === parseInt(palikaFilter);
@@ -99,7 +100,8 @@ const Dashboard = () => {
       endDate: new Date(site.endDate).toISOString().split('T')[0],
       state: site.state,
       district: site.district,
-      palika: site.palika || ''
+      palika: site.palika || '',
+      sector: site.sector || 'local-municipality',
     });
     // Set districts and palikas for edit
     const filteredDistricts = allDistricts.filter(d => d.StateId === site.state);
@@ -249,6 +251,7 @@ const Dashboard = () => {
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold">State</th>
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold xs:table-cell">District</th>
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold xs:table-cell">Palika</th>
+                <th className="py-2 px-2 sm:py-4 sm:px-6 text-left font-semibold xs:table-cell">Sector</th>
                 <th className="py-2 px-2 sm:py-4 sm:px-6 text-center font-semibold">Actions</th>
               </tr>
             </thead>
@@ -367,6 +370,45 @@ const Dashboard = () => {
                         <span className="text-slate-600">{getPalikaName(site.palika)}</span>
                       )}
                     </td>
+                    {/* Sector */}
+                <td className="py-2 px-2 sm:py-4 sm:px-6">
+                    {editingId === site._id ? (
+                      <select
+                        value={editForm.sector}
+                        onChange={(e) => setEditForm({ ...editForm, sector: e.target.value })}
+                        className="w-full px-2 py-1 border rounded focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="local-municipality">Local Municipality</option>
+                        <option value="hospital">Hospital</option>
+                        <option value="school">School</option>
+                        <option value="college">College</option>
+                        <option value="university">University</option>
+                        <option value="ngo">NGO</option>
+                        <option value="government">Government</option>
+                        <option value="corporate">Corporate</option>
+                        <option value="ecommerce">E-commerce</option>
+                        <option value="restaurant">Restaurant</option>
+                        <option value="hotel">Hotel</option>
+                        <option value="travel-agency">Travel Agency</option>
+                        <option value="it-company">IT Company</option>
+                        <option value="finance-bank">Finance / Bank</option>
+                        <option value="real-estate">Real Estate</option>
+                        <option value="personal-portfolio">Personal Portfolio</option>
+                        <option value="media-news">Media / News</option>
+                        <option value="manufacturing">Manufacturing</option>
+                        <option value="construction">Construction</option>
+                        <option value="healthcare-clinic">Healthcare Clinic</option>
+                        <option value="law-firm">Law Firm</option>
+                        <option value="education-center">Education Center</option>
+                        <option value="automobile">Automobile</option>
+                        <option value="retail-store">Retail Store</option>
+                        <option value="logistics">Logistics</option>
+                      </select>
+                    ) : (
+                      <span className="text-slate-700">{site.sector}</span>
+                    )}
+                  </td>
+
                     {/* Actions */}
                     <td className="py-2 px-2 sm:py-4 sm:px-6">
                       <div className="flex items-center justify-center gap-2">
