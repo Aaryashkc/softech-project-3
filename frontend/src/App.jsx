@@ -17,7 +17,8 @@ const protectedRoutes = [
   "/signup",
   "/addclient",
   "/users",
-  "/inquiries"
+  "/inquiries",
+  "/websites"
 ];
 
 const App = () => {
@@ -54,6 +55,11 @@ const App = () => {
         <Route path="/" element={authUser ? <MainDashboard/> : <Navigate to="/login" />} />
 
         <Route path="/inquiry/:id/actions" element={authUser ? <InquiryActionsPage /> : <Navigate to="/login" />} /> 
+        
+        {/* Catch-all route for 404s */}
+        <Route path="*" element={
+          authUser ? <Navigate to="/" replace /> : <Navigate to="/login" replace />
+        } />
       </Routes>
       <Toaster />
     </div>

@@ -34,14 +34,17 @@ export const useWebsiteStore = create((set, get) => ({
   updateWebsite: async (id, data) => {
     try {
       const res = await axiosInstance.put(`/website/${id}`, data);
-      set({
-        websites: get().websites.map((site) =>
-          site._id === id ? res.data : site
+      const updatedWebsite = res.data;
+      
+      set((state) => ({
+        websites: state.websites.map((site) =>
+          site._id === id ? { ...site, ...updatedWebsite } : site
         ),
-      });
+      }));
       toast.success("Website updated");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Update failed");
+      throw error; // Re-throw to handle in component
     }
   },
 

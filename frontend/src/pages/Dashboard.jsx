@@ -119,6 +119,8 @@ const Dashboard = () => {
     setEditForm({});
     setDistrictsList([]);
     setPalikaList([]);
+    setDistrictFilter('');
+    setPalikaFilter('');
   };
 
   const saveEdit = async () => {
@@ -128,8 +130,11 @@ const Dashboard = () => {
       setEditForm({});
       setDistrictsList([]);
       setPalikaList([]);
+      setDistrictFilter('');
+      setPalikaFilter('');
     } catch (error) {
       console.error('Edit failed:', error);
+      // Don't clear editing state on error so user can retry
     }
   };
 
